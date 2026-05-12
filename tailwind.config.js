@@ -6,18 +6,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        orange: {
-          DEFAULT: '#ff8800',
-        },
-        white: {
-          DEFAULT: '#ffffff',
-        },
-        green: {
-          dark: '#14532d',
-        },
+        primary: '#ff6b00',
+        dark: '#1f2937',
+        green: '#22c55e',
+        cream: '#fff7ed',
       },
       borderRadius: {
-        'xl': '20px',
+        xl: '20px',
       },
     },
   },

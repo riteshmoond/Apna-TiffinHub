@@ -1,29 +1,19 @@
-import React from "react";
-
 const Footer = () => {
   return (
-    <footer className="bg-green-dark text-white py-8 mt-12">
-      <div className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div className="text-lg font-bold">Apna TiffinHub © {new Date().getFullYear()}</div>
-        <div className="flex gap-6">
-          <a href="#home" className="hover:text-orange">Home</a>
-          <a href="#plans" className="hover:text-orange">Plans</a>
-          <a href="#menu" className="hover:text-orange">Menu</a>
-          <a href="#gallery" className="hover:text-orange">Gallery</a>
-          <a href="#reviews" className="hover:text-orange">Reviews</a>
-          <a href="#faq" className="hover:text-orange">FAQ</a>
-          <a href="#contact" className="hover:text-orange">Contact</a>
+    <footer className="bg-white py-10">
+      <div className="container-pad flex flex-col items-center justify-between gap-5 border-t border-orange-100 pt-8 text-center md:flex-row md:text-left">
+        <div>
+          <div className="text-xl font-black text-dark">Royal Tiffin Service</div>
+          <div className="mt-1 text-sm font-semibold text-gray-500">Fresh • Hygienic • Affordable</div>
         </div>
-        <div className="flex gap-4 mt-2 md:mt-0">
-          <a href="https://wa.me/91XXXXXXXXXX" target="_blank" rel="noopener noreferrer" title="WhatsApp" className="hover:text-orange">
-            <span className="sr-only">WhatsApp</span>
-            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M20.52 3.48A12.07 12.07 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.12.55 4.19 1.6 6.01L0 24l6.18-1.62A12.07 12.07 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.23-3.48-8.52zM12 22c-1.85 0-3.68-.5-5.26-1.44l-.38-.22-3.67.96.98-3.58-.25-.37A9.94 9.94 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.2-7.8c-.28-.14-1.65-.81-1.9-.9-.25-.09-.43-.14-.61.14-.18.28-.7.9-.86 1.08-.16.18-.32.2-.6.07-.28-.14-1.18-.44-2.25-1.4-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.12-.12.28-.32.42-.48.14-.16.18-.28.28-.46.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.84-2.01-.22-.53-.45-.46-.61-.47-.16-.01-.34-.01-.52-.01-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.3s.98 2.67 1.12 2.86c.14.18 1.93 2.95 4.68 4.02.65.28 1.16.45 1.56.58.65.21 1.24.18 1.7.11.52-.08 1.65-.67 1.88-1.32.23-.65.23-1.2.16-1.32-.07-.12-.25-.18-.52-.32z"/></svg>
-          </a>
-          <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" title="Instagram" className="hover:text-orange">
-            <span className="sr-only">Instagram</span>
-            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.584.012 4.85.07 1.17.056 1.97.24 2.43.41.59.22 1.01.48 1.45.92.44.44.7.86.92 1.45.17.46.354 1.26.41 2.43.058 1.266.07 1.65.07 4.85s-.012 3.584-.07 4.85c-.056 1.17-.24 1.97-.41 2.43-.22.59-.48 1.01-.92 1.45-.44.44-.86.7-1.45.92-.46.17-1.26.354-2.43.41-1.266.058-1.65.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.056-1.97-.24-2.43-.41-.59-.22-1.01-.48-1.45-.92-.44-.44-.7-.86-.92-1.45-.17-.46-.354-1.26-.41-2.43C2.212 15.784 2.2 15.4 2.2 12s.012-3.584.07-4.85c.056-1.17.24-1.97.41-2.43.22-.59.48-1.01.92-1.45.44-.44.86-.7 1.45-.92.46-.17 1.26-.354 2.43-.41C8.416 2.212 8.8 2.2 12 2.2zm0-2.2C8.736 0 8.332.012 7.052.07c-1.28.058-2.15.24-2.91.51-.8.28-1.48.65-2.15 1.32-.67.67-1.04 1.35-1.32 2.15-.27.76-.452 1.63-.51 2.91C.012 8.332 0 8.736 0 12c0 3.264.012 3.668.07 4.948.058 1.28.24 2.15.51 2.91.28.8.65 1.48 1.32 2.15.67.67 1.35 1.04 2.15 1.32.76.27 1.63.452 2.91.51C8.332 23.988 8.736 24 12 24s3.668-.012 4.948-.07c1.28-.058 2.15-.24 2.91-.51.8-.28 1.48-.65 2.15-1.32.67-.67 1.04-1.35 1.32-2.15.27-.76.452-1.63.51-2.91.058-1.28.07-1.684.07-4.948s-.012-3.668-.07-4.948c-.058-1.28-.24-2.15-.51-2.91-.28-.8-.65-1.48-1.32-2.15-.67-.67-1.35-1.04-2.15-1.32-.76-.27-1.63-.452-2.91-.51C15.668.012 15.264 0 12 0zm0 5.838A6.162 6.162 0 0 0 5.838 12 6.162 6.162 0 0 0 12 18.162 6.162 6.162 0 0 0 18.162 12 6.162 6.162 0 0 0 12 5.838zm0 10.162A4 4 0 1 1 12 8a4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
-          </a>
+        <div className="flex flex-wrap justify-center gap-5 text-sm font-bold text-gray-600">
+          <a href="#home" className="hover:text-primary">Home</a>
+          <a href="#menu" className="hover:text-primary">Menu</a>
+          <a href="#plans" className="hover:text-primary">Plans</a>
+          <a href="#about" className="hover:text-primary">About</a>
+          <a href="#contact" className="hover:text-primary">Contact</a>
         </div>
+        <div className="text-sm font-semibold text-gray-500">© {new Date().getFullYear()} Royal Tiffin Service</div>
       </div>
     </footer>
   );
