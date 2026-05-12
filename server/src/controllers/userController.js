@@ -64,3 +64,15 @@ export const loginUser = async (req, res) => {
 export const getProfile = async (req, res) => {
   res.json({ user: req.user });
 };
+
+export const updateProfile = async (req, res) => {
+  const { name, email, address } = req.body;
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    { name, email, address },
+    { new: true, runValidators: true }
+  ).select("-password");
+
+  res.json({ user });
+};

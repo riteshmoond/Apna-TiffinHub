@@ -45,3 +45,18 @@ export const updateOrderStatus = async (req, res) => {
 
   res.json(order);
 };
+
+export const cancelMyOrder = async (req, res) => {
+  const order = await Order.findOne({ _id: req.params.id, user: req.user._id });
+
+  if (!order) {
+    return res.status(404).json({ message: "Order not found" });
+  }
+
+  if (order.status !== "Pending") {
+    return res.status(400).json({ message: "Only pending orders can be cancelled" });
+  }
+
+  await order.deleteOne();
+  res.json({ message: "Order cancelled" });
+};

@@ -35,3 +35,21 @@ export const getMyOrders = async (token) => {
 
   return data;
 };
+
+export const cancelMyOrder = async (id, token) => {
+  const response = await fetch(`${API_BASE_URL}/orders/my/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.message || "Cancel order failed");
+  }
+
+  return data;
+};

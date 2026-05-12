@@ -58,3 +58,13 @@ export const registerUser = (payload) =>
     method: "POST",
     body: JSON.stringify(payload),
   });
+
+export const updateUserProfile = async (payload) => {
+  const data = await request("/users/me", {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+
+  localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+  return data;
+};

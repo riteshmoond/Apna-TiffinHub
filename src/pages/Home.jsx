@@ -13,6 +13,7 @@ import FloatingWhatsApp from "../components/FloatingWhatsApp";
 import OrderModal from "../components/OrderModal";
 import UserAuthModal from "../components/UserAuthModal";
 import MyOrdersModal from "../components/MyOrdersModal";
+import UserProfileModal from "../components/UserProfileModal";
 import { clearUserSession, getStoredUser, getUserToken } from "../lib/userAuth";
 
 const Home = () => {
@@ -20,6 +21,7 @@ const Home = () => {
   const [pendingPlan, setPendingPlan] = useState(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isMyOrdersOpen, setIsMyOrdersOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [user, setUser] = useState(() => getStoredUser());
 
   const openOrder = (plan) => {
@@ -46,6 +48,7 @@ const Home = () => {
     setUser(null);
     setOrderPlan(null);
     setIsMyOrdersOpen(false);
+    setIsProfileOpen(false);
   };
 
   return (
@@ -55,6 +58,7 @@ const Home = () => {
         onLogin={() => setIsAuthOpen(true)}
         onUserLogout={handleUserLogout}
         onMyOrders={() => setIsMyOrdersOpen(true)}
+        onProfile={() => setIsProfileOpen(true)}
       />
       <HeroSection onOrder={openOrder} />
       <MealPlans onOrder={openOrder} />
@@ -85,6 +89,12 @@ const Home = () => {
         onSuccess={handleAuthSuccess}
       />
       <MyOrdersModal isOpen={isMyOrdersOpen} onClose={() => setIsMyOrdersOpen(false)} />
+      <UserProfileModal
+        isOpen={isProfileOpen}
+        user={user}
+        onClose={() => setIsProfileOpen(false)}
+        onUpdated={setUser}
+      />
     </>
   );
 };

@@ -26,9 +26,11 @@ POST   /api/auth/login
 POST   /api/users/register
 POST   /api/users/login
 GET    /api/users/me
+PUT    /api/users/me
 GET    /api/orders
 GET    /api/orders/my
 POST   /api/orders
+DELETE /api/orders/my/:id
 PATCH  /api/orders/:id/status
 GET    /api/customers
 GET    /api/meals
