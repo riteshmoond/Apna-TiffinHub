@@ -1,30 +1,15 @@
-import Navbar from './components/Navbar'
-import HeroSection from './components/HeroSection'
-import MealPlans from './components/MealPlans'
-import WeeklyMenu from './components/WeeklyMenu'
-import WhyChooseUs from './components/WhyChooseUs'
-import Gallery from './components/Gallery'
-import Reviews from './components/Reviews'
-import SubscriptionPlans from './components/SubscriptionPlans'
-import Contact from './components/Contact'
-import Footer from './components/Footer'
-import FloatingWhatsApp from './components/FloatingWhatsApp'
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Dashboard from "./admin/Dashboard";
+import AdminLogin from "./admin/AdminLogin";
 
 function App() {
   return (
-    <>
-      <Navbar />
-      <HeroSection />
-      <MealPlans />
-      <WeeklyMenu />
-      <WhyChooseUs />
-      <Gallery />
-      <Reviews />
-      <SubscriptionPlans />
-      <Contact />
-      <Footer />
-      <FloatingWhatsApp />
-    </>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<Dashboard />} />
+    </Routes>
   )
 }
 

@@ -6,7 +6,7 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ];
 
-const Navbar = () => {
+const Navbar = ({ user, onLogin, onUserLogout, onMyOrders }) => {
   return (
     <nav className="sticky top-0 z-50 border-b border-orange-100 bg-white/90 backdrop-blur-xl">
       <div className="container-pad flex h-20 items-center justify-between gap-4">
@@ -32,14 +32,43 @@ const Navbar = () => {
           ))}
         </div>
 
-        <a
-          href="https://wa.me/91XXXXXXXXXX"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-xl bg-green px-4 py-3 text-sm font-extrabold text-white shadow-lg shadow-green-200 transition hover:-translate-y-0.5 hover:bg-emerald-600"
-        >
-          Order on WhatsApp
-        </a>
+        <div className="flex items-center gap-3">
+          {user ? (
+            <>
+              <span className="hidden text-sm font-black text-dark sm:inline">{user.name}</span>
+              <button
+                type="button"
+                onClick={onMyOrders}
+                className="rounded-xl bg-cream px-4 py-3 text-sm font-extrabold text-primary transition hover:bg-orange-100"
+              >
+                My Orders
+              </button>
+              <button
+                type="button"
+                onClick={onUserLogout}
+                className="rounded-xl bg-gray-100 px-4 py-3 text-sm font-extrabold text-dark transition hover:bg-gray-200"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={onLogin}
+              className="rounded-xl bg-dark px-4 py-3 text-sm font-extrabold text-white transition hover:bg-gray-800"
+            >
+              Login
+            </button>
+          )}
+          <a
+            href="https://wa.me/919257479576"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-xl bg-green px-4 py-3 text-sm font-extrabold text-white shadow-lg shadow-green-200 transition hover:-translate-y-0.5 hover:bg-emerald-600"
+          >
+            WhatsApp
+          </a>
+        </div>
       </div>
     </nav>
   );

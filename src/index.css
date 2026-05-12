@@ -50,3 +50,41 @@
     line-height: 2.5rem;
   }
 }
+
+@layer utilities {
+  .bg-dark {
+    background-color: #1f2937;
+  }
+
+  .text-dark {
+    color: #1f2937;
+  }
+
+  .bg-primary {
+    background-color: #ff6b00;
+  }
+
+  .text-primary {
+    color: #ff6b00;
+  }
+
+  .border-primary {
+    border-color: #ff6b00;
+  }
+
+  .bg-green {
+    background-color: #22c55e;
+  }
+
+  .text-green {
+    color: #22c55e;
+  }
+
+  .bg-cream {
+    background-color: #fff7ed;
+  }
+
+  .accent-primary {
+    accent-color: #ff6b00;
+  }
+}

@@ -1,6 +1,6 @@
 import heroImage from "../assets/tiffin-hero.png";
 
-const HeroSection = () => {
+const HeroSection = ({ onOrder }) => {
   return (
     <section id="home" className="overflow-hidden bg-cream">
       <div className="container-pad grid min-h-[calc(100vh-80px)] items-center gap-12 py-14 lg:grid-cols-[1fr_0.95fr]">
@@ -10,19 +10,18 @@ const HeroSection = () => {
             Healthy Homemade Food Delivered To Your Door
           </h1>
           <p className="mt-6 max-w-2xl text-lg font-medium leading-8 text-gray-600">
-            Fresh • Hygienic • Affordable meals for PG students, office employees,
+            Fresh, hygienic, and affordable meals for PG students, office employees,
             hostels, gym people, and working bachelors.
           </p>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-            <a
-              href="https://wa.me/91XXXXXXXXXX"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={() => onOrder({ name: "Basic Veg Plan", amount: 60 })}
               className="rounded-xl bg-primary px-7 py-4 text-center font-extrabold text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-orange-600"
             >
               Order Now
-            </a>
+            </button>
             <a
               href="#menu"
               className="rounded-xl border border-orange-200 bg-white px-7 py-4 text-center font-extrabold text-primary shadow-sm transition hover:-translate-y-1 hover:border-primary"

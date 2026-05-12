@@ -9,7 +9,7 @@ const Contact = () => {
         <div className="mt-12 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-xl bg-white p-6 shadow-xl shadow-orange-100">
             {[
-              ["Phone", "+91-XXXXXXXXXX"],
+              ["Phone", "+91 9257479576"],
               ["Email", "info@royaltiffinservice.com"],
               ["Address", "Mansarovar, Jaipur, Rajasthan"],
               ["WhatsApp", "Order, pause, or update subscription"],
@@ -20,7 +20,7 @@ const Contact = () => {
               </div>
             ))}
             <a
-              href="https://wa.me/91XXXXXXXXXX"
+              href="https://wa.me/919257479576"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-6 block rounded-xl bg-green px-6 py-4 text-center font-black text-white transition hover:bg-emerald-600"

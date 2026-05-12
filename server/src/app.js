@@ -1,0 +1,50 @@
+import cors from "cors";
+import express from "express";
+import authRoutes from "./routes/authRoutes.js";
+import customerRoutes from "./routes/customerRoutes.js";
+import mealRoutes from "./routes/mealRoutes.js";
+import menuRoutes from "./routes/menuRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import revenueRoutes from "./routes/revenueRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+
+const app = express();
+
+app.use(
+  cors({
+    origin: process.env.CLIENT_ORIGIN || "http://localhost:5175",
+    credentials: true,
+  })
+);
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "Royal Tiffin API is running",
+    health: "/api/health",
+    frontend: process.env.CLIENT_ORIGIN || "http://localhost:5175",
+  });
+});
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", service: "royal-tiffin-api" });
+});
+
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/customers", customerRoutes);
+app.use("/api/meals", mealRoutes);
+app.use("/api/menu", menuRoutes);
+app.use("/api/revenue", revenueRoutes);
+
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({ message: err.message || "Server error" });
+});
+
+export default app;

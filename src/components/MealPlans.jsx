@@ -2,24 +2,27 @@ const plans = [
   {
     name: "Basic Veg Plan",
     price: "₹60",
+    amount: 60,
     tag: "Daily favorite",
     items: ["4 Roti", "Sabji", "Dal", "Rice"],
   },
   {
     name: "Premium Plan",
     price: "₹90",
+    amount: 90,
     tag: "Most ordered",
     items: ["Paneer", "Sweet", "Salad", "Buttermilk"],
   },
   {
     name: "Office Lunch",
     price: "₹80",
+    amount: 80,
     tag: "Quick delivery",
     items: ["3 Roti", "Seasonal sabji", "Rice", "Pickle"],
   },
 ];
 
-const MealPlans = () => {
+const MealPlans = ({ onOrder }) => {
   return (
     <section id="plans" className="bg-white py-20">
       <div className="container-pad">
@@ -52,14 +55,13 @@ const MealPlans = () => {
                   </li>
                 ))}
               </ul>
-              <a
-                href="https://wa.me/91XXXXXXXXXX"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 block rounded-xl bg-dark px-5 py-3 text-center font-extrabold text-white transition group-hover:bg-primary"
+              <button
+                type="button"
+                onClick={() => onOrder(plan)}
+                className="mt-8 block w-full rounded-xl bg-dark px-5 py-3 text-center font-extrabold text-white transition group-hover:bg-primary"
               >
                 Subscribe
-              </a>
+              </button>
             </div>
           ))}
         </div>
