@@ -1,45 +1,62 @@
-import bcrypt from "bcryptjs";
+import User from "../models/User.js";
 import jwt from "jsonwebtoken";
-import Admin from "../models/Admin.js";
 
-const signToken = (admin) =>
-  jwt.sign({ id: admin._id, email: admin.email }, process.env.JWT_SECRET || "dev-secret", {
-    expiresIn: "7d",
-  });
-
-export const loginAdmin = async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
-  }
-
-  const configuredEmail = process.env.ADMIN_EMAIL || "admin@royaltiffin.com";
-  const configuredPassword = process.env.ADMIN_PASSWORD || "admin123";
-
-  let admin = await Admin.findOne({ email: email.toLowerCase() });
-
-  if (!admin && email.toLowerCase() === configuredEmail.toLowerCase()) {
-    const hashedPassword = await bcrypt.hash(configuredPassword, 10);
-    admin = await Admin.create({
-      email: configuredEmail,
-      password: hashedPassword,
-      name: "Royal Admin",
-    });
-  }
-
-  if (!admin) {
-    return res.status(401).json({ message: "Invalid admin email or password" });
-  }
-
-  const isMatch = await bcrypt.compare(password, admin.password);
-
-  if (!isMatch) {
-    return res.status(401).json({ message: "Invalid admin email or password" });
-  }
-
-  res.json({
-    token: signToken(admin),
-    admin: { id: admin._id, name: admin.name, email: admin.email },
-  });
+// Helper to generate JWT
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user._id, email: user.email },
+    process.env.JWT_SECRET || "dev-secret",
+    { expiresIn: "7d" }
+  );
 };
+
+// Register controller
+export const register = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Name, email, and password are required" });
+    }
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return res.status(409).json({ message: "Email already registered. Please login." });
+    }
+    const user = await User.create({ name, email, password });
+    const token = generateToken(user);
+    res.status(201).json({
+      message: "Registration successful",
+      user: { id: user._id, name: user.name, email: user.email },
+      token,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Registration failed", error: err.message });
+  }
+};
+
+// Login controller
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+    const token = generateToken(user);
+    res.json({
+      message: "Login successful",
+      user: { id: user._id, name: user.name, email: user.email },
+      token,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Login failed", error: err.message });
+  }
+};
+
+

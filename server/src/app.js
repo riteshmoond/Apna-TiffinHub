@@ -9,10 +9,21 @@ import revenueRoutes from "./routes/revenueRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
+const allowedOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173,http://localhost:5175")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || "http://localhost:5175",
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
   })
 );
@@ -22,7 +33,7 @@ app.get("/", (req, res) => {
   res.json({
     message: "Royal Tiffin API is running",
     health: "/api/health",
-    frontend: process.env.CLIENT_ORIGIN || "http://localhost:5175",
+    frontend: allowedOrigins,
   });
 });
 

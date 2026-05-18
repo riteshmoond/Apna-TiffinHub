@@ -1,3 +1,4 @@
+import logo from "../assets/logo.png";
 const navItems = [
   { label: "Home", href: "#home" },
   { label: "Menu", href: "#menu" },
@@ -11,8 +12,8 @@ const Navbar = ({ user, onLogin, onUserLogout, onMyOrders, onProfile }) => {
     <nav className="sticky top-0 z-50 border-b border-orange-100 bg-white/90 backdrop-blur-xl">
       <div className="container-pad flex h-20 items-center justify-between gap-4">
         <a href="#home" className="flex items-center gap-3">
-          <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-xl text-white shadow-lg shadow-orange-200">
-            R
+          <span className="grid h-11 w-11 place-items-center rounded-full bg-cream text-dark ring-1 ring-gray-200 ">
+            <img src={logo} alt="Logo" className=" object-cover" />
           </span>
           <span>
             <span className="block text-xl font-extrabold text-dark">Royal Tiffin Service</span>
