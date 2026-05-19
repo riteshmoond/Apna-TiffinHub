@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loginUser, registerUser, setUserSession } from "../lib/userAuth";
 
 const initialForm = {
@@ -14,6 +14,17 @@ const UserAuthModal = ({ isOpen, onClose, onSuccess }) => {
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -44,8 +55,8 @@ const UserAuthModal = ({ isOpen, onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[90] grid place-items-center bg-black/50 px-4 py-6">
-      <section className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+    <div className="fixed inset-0 z-[90] grid place-items-center overflow-hidden bg-black/50 px-4 py-4 lg:px-8 lg:py-8">
+      <section className="max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-xl bg-white p-5 shadow-2xl sm:p-6 lg:max-h-[calc(100dvh-4rem)] lg:p-8">
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="section-kicker">Customer account</div>

@@ -50,6 +50,17 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, onOrderPlaced }) => {
     setStatus({ type: "", text: "" });
   }, [isOpen, selectedPlan, user]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const updateForm = (field, value) => {
@@ -108,11 +119,10 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, onOrderPlaced }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[80] overflow-y-auto bg-black/50 px-4 py-6">
-      <div className="mx-auto grid min-h-full w-full max-w-5xl place-items-center">
-        <div className="w-full overflow-hidden rounded-xl bg-white shadow-2xl">
-          <div className="grid lg:grid-cols-[0.85fr_1.15fr]">
-            <aside className="bg-dark p-6 text-white">
+    <div className="fixed inset-0 z-[80] grid place-items-center overflow-hidden bg-black/50 px-4 py-4 lg:px-8 lg:py-8">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-5xl overflow-hidden rounded-xl bg-white shadow-2xl lg:max-h-[calc(100dvh-4rem)]">
+        <div className="grid max-h-[inherit] overflow-y-auto lg:grid-cols-[0.85fr_1.15fr]">
+          <aside className="bg-dark p-6 text-white lg:sticky lg:top-0 lg:max-h-[inherit] lg:overflow-y-auto">
               <div className="flex items-start justify-between gap-4 lg:block">
                 <div>
                   <div className="text-sm font-black uppercase tracking-[0.2em] text-orange-200">Order summary</div>
@@ -159,7 +169,7 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, onOrderPlaced }) => {
               </div>
             </aside>
 
-            <section className="p-6">
+            <section className="p-6 lg:min-h-0 lg:overflow-y-auto">
               <div className="hidden items-start justify-between gap-4 lg:flex">
                 <div>
                   <div className="section-kicker">Place order</div>
@@ -298,7 +308,6 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, onOrderPlaced }) => {
             </section>
           </div>
         </div>
-      </div>
     </div>
   );
 };

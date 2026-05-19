@@ -7,7 +7,7 @@ export const stats = [
 
 export const orders = [
   { id: "ORD-101", customer: "Ritesh Sharma", plan: "Premium", status: "Delivered", amount: "₹90", time: "12:20 PM" },
-  { id: "ORD-102", customer: "Priya Meena", plan: "Basic Veg", status: "Preparing", amount: "₹60", time: "12:45 PM" },
+  { id: "ORD-102", customer: "Priya Meena", plan: "Basic Veg", status: "Out for Delivery", amount: "₹60", time: "12:45 PM" },
   { id: "ORD-103", customer: "Aman Jain", plan: "Monthly", status: "Pending", amount: "₹2200", time: "01:10 PM" },
   { id: "ORD-104", customer: "Neha Gupta", plan: "Office Lunch", status: "Delivered", amount: "₹80", time: "01:30 PM" },
 ];

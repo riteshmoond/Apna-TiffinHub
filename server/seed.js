@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import { connectDB } from "./src/config/db.js";
 import Admin from "./src/models/Admin.js";
@@ -25,7 +24,7 @@ const seed = async () => {
   await Admin.create({
     name: "Royal Admin",
     email: process.env.ADMIN_EMAIL || "admin@royaltiffin.com",
-    password: await bcrypt.hash(process.env.ADMIN_PASSWORD || "admin123", 10),
+    password: process.env.ADMIN_PASSWORD || "admin123",
   });
 
   await Meal.insertMany([
@@ -55,12 +54,12 @@ const seed = async () => {
     phone: "9257479576",
     email: "customer@example.com",
     address: "Mansarovar, Jaipur",
-    password: await bcrypt.hash("user123", 10),
+    password: "user123",
   });
 
   await Order.insertMany([
     { user: demoUser._id, customer: "Ritesh Sharma", phone: "+91 98765 43210", address: "Mansarovar, Jaipur", plan: "Premium", status: "Delivered", amount: 90, time: "12:20 PM" },
-    { user: demoUser._id, customer: "Priya Meena", phone: "+91 99887 76655", address: "Vaishali Nagar, Jaipur", plan: "Basic Veg", status: "Preparing", amount: 60, time: "12:45 PM" },
+    { user: demoUser._id, customer: "Priya Meena", phone: "+91 99887 76655", address: "Vaishali Nagar, Jaipur", plan: "Basic Veg", status: "Out for Delivery", amount: 60, time: "12:45 PM" },
     { user: demoUser._id, customer: "Aman Jain", phone: "+91 91234 56789", address: "Malviya Nagar, Jaipur", plan: "Monthly", status: "Pending", amount: 2200, time: "01:10 PM" },
   ]);
 

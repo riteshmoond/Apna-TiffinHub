@@ -2,6 +2,7 @@ const StatusBadge = ({ status }) => {
   const classes = {
     Pending: "bg-amber-100 text-amber-700",
     Preparing: "bg-blue-100 text-blue-700",
+    "Out for Delivery": "bg-violet-100 text-violet-700",
     Delivered: "bg-emerald-100 text-emerald-700",
   };
 

@@ -3,7 +3,7 @@ import { orders as initialOrders } from "./data";
 import StatusBadge from "./StatusBadge";
 import { api } from "./api";
 
-const statuses = ["Pending", "Preparing", "Delivered"];
+const statuses = ["Pending", "Preparing", "Out for Delivery", "Delivered"];
 
 const phoneDigits = (phone = "") => phone.replace(/\D/g, "");
 
@@ -129,7 +129,7 @@ const Orders = () => {
               </div>
             </div>
 
-            <div className="mt-6 grid gap-2 sm:grid-cols-3">
+            <div className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
               {statuses.map((status) => (
                 <button
                   key={status}

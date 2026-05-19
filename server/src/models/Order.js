@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema(
     instructions: { type: String, default: "" },
     status: {
       type: String,
-      enum: ["Pending", "Preparing", "Delivered"],
+      enum: ["Pending", "Preparing", "Out for Delivery", "Delivered"],
       default: "Pending",
     },
     amount: { type: Number, required: true },
