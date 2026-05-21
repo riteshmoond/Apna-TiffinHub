@@ -53,3 +53,21 @@ export const cancelMyOrder = async (id, token) => {
 
   return data;
 };
+
+export const getCatalog = async () => {
+  const response = await fetch(`${API_BASE_URL}/catalog`);
+  const data = await response.json().catch(() => ([]));
+  if (!response.ok) {
+    throw new Error(data.message || "Catalog load failed");
+  }
+  return data;
+};
+
+export const getGallery = async () => {
+  const response = await fetch(`${API_BASE_URL}/gallery`);
+  const data = await response.json().catch(() => ([]));
+  if (!response.ok) {
+    throw new Error(data.message || "Gallery load failed");
+  }
+  return data;
+};

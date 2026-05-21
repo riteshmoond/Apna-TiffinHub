@@ -72,4 +72,35 @@ export const api = {
       body: JSON.stringify({ items }),
     }),
   getRevenue: () => request("/revenue"),
+  getAnalytics: () => request("/analytics"),
+  getCatalog: () => request("/catalog"),
+  createCatalogItem: (payload) =>
+    request("/catalog", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  updateCatalogItem: (id, payload) =>
+    request(`/catalog/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+  deleteCatalogItem: (id) =>
+    request(`/catalog/${id}`, {
+      method: "DELETE",
+    }),
+  getGallery: () => request("/gallery"),
+  createGalleryItem: (payload) =>
+    request("/gallery", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  updateGalleryItem: (id, payload) =>
+    request(`/gallery/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+  deleteGalleryItem: (id) =>
+    request(`/gallery/${id}`, {
+      method: "DELETE",
+    }),
 };

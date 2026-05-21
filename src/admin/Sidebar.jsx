@@ -17,6 +17,8 @@ const items = [
   { id: "customers", label: "Customers", icon: FiUsers },
   { id: "revenue", label: "Revenue", icon: FiBarChart2 },
   { id: "weekly-menu", label: "Weekly Menu", icon: MdOutlineRestaurantMenu },
+  { id: "catalog", label: "Menu Catalog", icon: MdOutlineRestaurantMenu },
+  { id: "gallery", label: "Gallery", icon: MdOutlineRestaurantMenu },
 ];
 
 const Sidebar = ({ activeView, onChangeView, isOpen, onToggle }) => {

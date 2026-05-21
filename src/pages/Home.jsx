@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import MealPlans from "../components/MealPlans";
 import WeeklyMenu from "../components/WeeklyMenu";
+import MenuCatalog from "../components/MenuCatalog";
 import WhyChooseUs from "../components/WhyChooseUs";
 import Gallery from "../components/Gallery";
 import Reviews from "../components/Reviews";
@@ -23,6 +24,7 @@ const Home = () => {
   const [isMyOrdersOpen, setIsMyOrdersOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [user, setUser] = useState(() => getStoredUser());
+  const [reorderDraft, setReorderDraft] = useState(null);
 
   const openOrder = (plan) => {
     const nextPlan = plan || { name: "Basic Veg Plan", amount: 60 };
@@ -49,6 +51,23 @@ const Home = () => {
     setOrderPlan(null);
     setIsMyOrdersOpen(false);
     setIsProfileOpen(false);
+    setReorderDraft(null);
+  };
+
+  const handleReorder = (order) => {
+    if (!order) return;
+    setReorderDraft({
+      customer: order.customer,
+      phone: order.phone,
+      address: order.address,
+      quantity: order.quantity,
+      mealTime: order.mealTime,
+      deliveryDate: order.deliveryDate,
+      instructions: order.instructions,
+      paymentMode: order.paymentMode,
+    });
+    setOrderPlan({ name: order.plan });
+    setIsMyOrdersOpen(false);
   };
 
   return (
@@ -63,6 +82,7 @@ const Home = () => {
       <HeroSection onOrder={openOrder} />
       <MealPlans onOrder={openOrder} />
       <WeeklyMenu />
+      <MenuCatalog onOrder={openOrder} />
       <WhyChooseUs />
       <Gallery />
       <Reviews />
@@ -74,9 +94,11 @@ const Home = () => {
         isOpen={Boolean(orderPlan)}
         selectedPlan={orderPlan}
         user={user}
+        prefillOrder={reorderDraft}
         onClose={() => setOrderPlan(null)}
         onOrderPlaced={() => {
           setOrderPlan(null);
+          setReorderDraft(null);
           setIsMyOrdersOpen(true);
         }}
       />
@@ -88,7 +110,11 @@ const Home = () => {
         }}
         onSuccess={handleAuthSuccess}
       />
-      <MyOrdersModal isOpen={isMyOrdersOpen} onClose={() => setIsMyOrdersOpen(false)} />
+      <MyOrdersModal
+        isOpen={isMyOrdersOpen}
+        onClose={() => setIsMyOrdersOpen(false)}
+        onReorder={handleReorder}
+      />
       <UserProfileModal
         isOpen={isProfileOpen}
         user={user}

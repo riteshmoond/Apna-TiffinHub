@@ -5,6 +5,8 @@ import Orders from "./Orders";
 import Customers from "./Customers";
 import Meals from "./Meals";
 import WeeklyMenu from "./WeeklyMenu";
+import Catalog from "./Catalog";
+import GalleryAdmin from "./GalleryAdmin";
 import Revenue from "./Revenue";
 import { customers as initialCustomers, orders as initialOrders, revenue as initialRevenue } from "./data";
 import { api, isAdminLoggedIn } from "./api";
@@ -14,6 +16,7 @@ const DashboardHome = ({ onOpenOrders }) => {
   const [orders, setOrders] = useState(initialOrders);
   const [customers, setCustomers] = useState(initialCustomers);
   const [revenue, setRevenue] = useState(initialRevenue);
+  const [analytics, setAnalytics] = useState(null);
 
   useEffect(() => {
     api.getOrders().then(setOrders).catch(() => setOrders(initialOrders));
@@ -21,12 +24,17 @@ const DashboardHome = ({ onOpenOrders }) => {
     api.getRevenue().then((items) => {
       if (items.length) setRevenue(items);
     }).catch(() => setRevenue(initialRevenue));
+    api.getAnalytics().then(setAnalytics).catch(() => setAnalytics(null));
   }, []);
 
   const totalRevenue = revenue.reduce((sum, item) => sum + item.value, 0);
-  const pendingOrders = orders.filter((order) => order.status === "Pending").length;
+  const pendingOrders = analytics?.pendingOrders ?? orders.filter((order) => order.status === "Pending").length;
+  const todaysOrders = analytics?.totalOrdersToday ?? orders.length;
+  const dailyOrders = analytics?.dailyOrders ?? [];
+  const popularPlans = analytics?.popularPlans ?? [];
+  const maxDailyOrders = Math.max(...dailyOrders.map((item) => item.count), 1);
   const statCards = [
-    { label: "Total Orders", value: orders.length, change: `${orders.length} orders`, tone: "bg-orange-50 text-primary" },
+    { label: "Today's Orders", value: todaysOrders, change: "Last 24 hours", tone: "bg-orange-50 text-primary" },
     { label: "Revenue", value: `₹${totalRevenue.toLocaleString("en-IN")}`, change: "Delivered orders", tone: "bg-emerald-50 text-green" },
     { label: "Customers", value: customers.length, change: `${customers.length} active customers`, tone: "bg-blue-50 text-blue-600" },
     { label: "Pending Orders", value: pendingOrders, change: "Needs action", tone: "bg-amber-50 text-amber-600" },
@@ -42,6 +50,52 @@ const DashboardHome = ({ onOpenOrders }) => {
             <div className="mt-2 text-4xl font-black text-dark">{card.value}</div>
           </div>
         ))}
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-black text-dark">Daily Orders</h2>
+              <p className="mt-1 text-sm font-semibold text-gray-500">Last 7 days order volume.</p>
+            </div>
+          </div>
+          <div className="mt-6 flex h-56 items-end gap-3 rounded-xl bg-cream p-4">
+            {dailyOrders.length ? (
+              dailyOrders.map((item) => (
+                <div key={item.date} className="flex flex-1 flex-col items-center gap-2">
+                  <div className="text-xs font-black text-dark">{item.count}</div>
+                  <div
+                    className="w-full rounded-t-xl bg-primary shadow-lg shadow-orange-200"
+                    style={{ height: `${(item.count / maxDailyOrders) * 160}px` }}
+                  />
+                  <div className="text-xs font-black text-gray-500">
+                    {new Date(item.date).toLocaleDateString("en-IN", { weekday: "short" })}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-sm font-bold text-gray-500">No data yet</div>
+            )}
+          </div>
+        </div>
+
+        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+          <h2 className="text-2xl font-black text-dark">Popular Meal Plans</h2>
+          <p className="mt-1 text-sm font-semibold text-gray-500">Most ordered plans this week.</p>
+          <div className="mt-6 space-y-3">
+            {popularPlans.length ? (
+              popularPlans.map((item) => (
+                <div key={item.plan} className="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
+                  <div className="font-bold text-dark">{item.plan}</div>
+                  <div className="text-sm font-black text-primary">{item.count} orders</div>
+                </div>
+              ))
+            ) : (
+              <div className="text-sm font-bold text-gray-500">No data yet</div>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
@@ -106,6 +160,8 @@ const titles = {
   customers: ["Customers", "View customer details and order history."],
   revenue: ["Revenue", "Track monthly revenue performance."],
   "weekly-menu": ["Weekly Menu", "Update day-wise meals for customers."],
+  catalog: ["Menu Catalog", "Manage photos, prices, and combos."],
+  gallery: ["Gallery", "Manage homepage gallery photos."],
 };
 
 const Dashboard = () => {
@@ -133,6 +189,10 @@ const Dashboard = () => {
         return <Revenue />;
       case "weekly-menu":
         return <WeeklyMenu />;
+      case "catalog":
+        return <Catalog />;
+      case "gallery":
+        return <GalleryAdmin />;
       default:
         return <DashboardHome onOpenOrders={() => changeView("orders")} />;
     }

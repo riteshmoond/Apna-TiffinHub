@@ -25,8 +25,10 @@ const planPrices = {
 
 const mealTimes = ["Lunch", "Dinner", "Both"];
 const paymentModes = ["Cash on Delivery", "UPI", "Pay on WhatsApp"];
+const UPI_ID = "royaltiffin@upi";
+const PAYEE_NAME = "Royal Tiffin Service";
 
-const OrderModal = ({ isOpen, onClose, selectedPlan, user, onOrderPlaced }) => {
+const OrderModal = ({ isOpen, onClose, selectedPlan, user, prefillOrder, onOrderPlaced }) => {
   const [form, setForm] = useState(defaultOrder);
   const [status, setStatus] = useState({ type: "", text: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,6 +37,12 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, onOrderPlaced }) => {
     user?.address || user?.addresses?.find((item) => item.isDefault)?.address || "";
 
   const total = useMemo(() => Number(form.amount) * Number(form.quantity || 1), [form.amount, form.quantity]);
+  const upiLink = useMemo(() => {
+    const amount = Number(total || 0).toFixed(0);
+    const note = encodeURIComponent(`${form.plan} order`);
+    return `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${amount}&cu=INR&tn=${note}`;
+  }, [form.plan, total]);
+  const showUpi = form.paymentMode === "UPI";
 
   useEffect(() => {
     if (!isOpen) return;
@@ -43,15 +51,19 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, onOrderPlaced }) => {
     const amount = selectedPlan?.amount || planPrices[plan] || defaultOrder.amount;
     setForm((current) => ({
       ...current,
-      customer: user?.name || current.customer,
-      phone: user?.phone || current.phone,
-      address: defaultAddress || current.address,
+      customer: prefillOrder?.customer || user?.name || current.customer,
+      phone: prefillOrder?.phone || user?.phone || current.phone,
+      address: prefillOrder?.address || defaultAddress || current.address,
+      quantity: prefillOrder?.quantity || current.quantity,
+      mealTime: prefillOrder?.mealTime || current.mealTime,
+      deliveryDate: prefillOrder?.deliveryDate || current.deliveryDate || today,
+      paymentMode: prefillOrder?.paymentMode || current.paymentMode,
+      instructions: prefillOrder?.instructions || current.instructions,
       plan,
       amount,
-      deliveryDate: current.deliveryDate || today,
     }));
     setStatus({ type: "", text: "" });
-  }, [isOpen, selectedPlan, user]);
+  }, [isOpen, selectedPlan, user, prefillOrder, defaultAddress]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -282,6 +294,25 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, onOrderPlaced }) => {
                       className="rounded-xl border border-orange-100 bg-cream px-4 py-3 font-black text-primary outline-none"
                     />
                   </div>
+                  {showUpi && (
+                    <div className="mt-4 grid gap-4 rounded-xl border border-orange-100 bg-cream p-4 sm:grid-cols-[140px_1fr]">
+                      <img
+                        src={`https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(upiLink)}`}
+                        alt="UPI QR"
+                        className="h-28 w-28 rounded-lg bg-white p-2"
+                      />
+                      <div className="space-y-2">
+                        <div className="text-sm font-black text-dark">Scan UPI QR to pay</div>
+                        <div className="text-sm font-semibold text-gray-600">UPI ID: {UPI_ID}</div>
+                        <a
+                          href={upiLink}
+                          className="inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2 text-sm font-black text-white"
+                        >
+                          Pay now
+                        </a>
+                      </div>
+                    </div>
+                  )}
                   <textarea
                     value={form.instructions}
                     onChange={(event) => updateForm("instructions", event.target.value)}

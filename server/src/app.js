@@ -1,6 +1,9 @@
 import cors from "cors";
 import express from "express";
 import authRoutes from "./routes/authRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
+import catalogRoutes from "./routes/catalogRoutes.js";
+import galleryRoutes from "./routes/galleryRoutes.js";
 import customerRoutes from "./routes/customerRoutes.js";
 import mealRoutes from "./routes/mealRoutes.js";
 import menuRoutes from "./routes/menuRoutes.js";
@@ -42,6 +45,9 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/catalog", catalogRoutes);
+app.use("/api/gallery", galleryRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/customers", customerRoutes);

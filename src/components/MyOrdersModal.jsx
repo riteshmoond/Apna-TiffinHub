@@ -29,7 +29,7 @@ const DetailRow = ({ label, value }) => (
   </div>
 );
 
-const MyOrdersModal = ({ isOpen, onClose }) => {
+const MyOrdersModal = ({ isOpen, onClose, onReorder }) => {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [message, setMessage] = useState("");
@@ -228,15 +228,24 @@ const MyOrdersModal = ({ isOpen, onClose }) => {
                   </div>
                 )}
 
-                {selectedOrder.status === "Pending" && (
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                   <button
                     type="button"
-                    onClick={() => cancelOrder(selectedOrder)}
-                    className="mt-6 rounded-xl bg-red-50 px-5 py-3 font-black text-red-600 transition hover:bg-red-100"
+                    onClick={() => onReorder?.(selectedOrder)}
+                    className="rounded-xl bg-dark px-5 py-3 font-black text-white transition hover:bg-gray-900"
                   >
-                    Cancel Order
+                    Reorder
                   </button>
-                )}
+                  {selectedOrder.status === "Pending" && (
+                    <button
+                      type="button"
+                      onClick={() => cancelOrder(selectedOrder)}
+                      className="rounded-xl bg-red-50 px-5 py-3 font-black text-red-600 transition hover:bg-red-100"
+                    >
+                      Cancel Order
+                    </button>
+                  )}
+                </div>
               </>
             )}
           </section>
