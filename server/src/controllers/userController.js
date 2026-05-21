@@ -11,6 +11,29 @@ const cleanEmail = (email) => {
   return value || undefined;
 };
 
+const normalizeAddresses = (addresses = []) => {
+  const cleaned = Array.isArray(addresses)
+    ? addresses
+        .filter((item) => item && item.address)
+        .map((item) => ({
+          label: String(item.label || "").trim(),
+          address: String(item.address || "").trim(),
+          isDefault: Boolean(item.isDefault),
+        }))
+    : [];
+
+  if (cleaned.length === 0) return [];
+  const hasDefault = cleaned.some((item) => item.isDefault);
+  if (!hasDefault) cleaned[0].isDefault = true;
+  return cleaned.map((item, index) => ({
+    ...item,
+    isDefault: item.isDefault || (!hasDefault && index === 0),
+  }));
+};
+
+const getDefaultAddress = (user) =>
+  user?.address || user?.addresses?.find((item) => item.isDefault)?.address || "";
+
 const userResponse = (user, token) => ({
   token,
   user: {
@@ -18,7 +41,8 @@ const userResponse = (user, token) => ({
     name: user.name,
     phone: user.phone,
     email: user.email || "",
-    address: user.address || "",
+    address: getDefaultAddress(user),
+    addresses: user.addresses || [],
   },
 });
 
@@ -42,12 +66,16 @@ export const registerUser = async (req, res) => {
     }
   }
 
+  const addresses = address
+    ? [{ label: "Home", address, isDefault: true }]
+    : [];
   const user = await User.create({
     name,
     phone,
     email,
     password,
     address: address || "",
+    addresses,
   });
 
   res.status(201).json(userResponse(user, signToken(user)));
@@ -73,10 +101,14 @@ export const getProfile = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
+  const hasAddresses = Object.prototype.hasOwnProperty.call(req.body, "addresses");
+  const addresses = normalizeAddresses(req.body.addresses);
+  const defaultAddress = addresses.find((item) => item.isDefault)?.address;
   const updates = {
     name: req.body.name,
     email: cleanEmail(req.body.email),
-    address: req.body.address || "",
+    address: defaultAddress || req.body.address || "",
+    ...(hasAddresses ? { addresses } : {}),
   };
 
   Object.keys(updates).forEach((key) => updates[key] === undefined && delete updates[key]);

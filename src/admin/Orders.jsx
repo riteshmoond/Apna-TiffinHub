@@ -45,16 +45,26 @@ const Orders = () => {
     orders.find((order) => (order._id || order.id) === selectedId) || filteredOrders[0] || null;
 
   const updateStatus = async (id, status) => {
+    let etaMinutes = undefined;
+    if (status === "Out for Delivery") {
+      const input = window.prompt("Estimated delivery time (minutes)?", "20");
+      if (input === null) return; // Cancelled
+      etaMinutes = parseInt(input, 10);
+      if (isNaN(etaMinutes) || etaMinutes <= 0) {
+        setMessage("Please enter a valid ETA in minutes.");
+        return;
+      }
+    }
     const previousOrders = orders;
     setMessage("");
     setOrders((current) =>
-      current.map((order) => ((order._id || order.id) === id ? { ...order, status } : order))
+      current.map((order) => ((order._id || order.id) === id ? { ...order, status, etaMinutes } : order))
     );
 
     if (id.startsWith("ORD-")) return;
 
     try {
-      const updatedOrder = await api.updateOrderStatus(id, status);
+      const updatedOrder = await api.updateOrderStatus(id, status, etaMinutes);
       setOrders((current) => current.map((order) => (order._id === id ? updatedOrder : order)));
       setMessage(`Order marked as ${status}.`);
     } catch (error) {

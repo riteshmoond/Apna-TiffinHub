@@ -49,10 +49,10 @@ export const api = {
       body: JSON.stringify(payload),
     }),
   getOrders: () => request("/orders"),
-  updateOrderStatus: (id, status) =>
+  updateOrderStatus: (id, status, etaMinutes) =>
     request(`/orders/${id}/status`, {
       method: "PATCH",
-      body: JSON.stringify({ status }),
+      body: JSON.stringify(etaMinutes ? { status, etaMinutes } : { status }),
     }),
   getCustomers: () => request("/customers"),
   getMeals: () => request("/meals"),

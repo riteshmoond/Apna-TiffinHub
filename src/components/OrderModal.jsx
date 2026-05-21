@@ -31,6 +31,9 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, onOrderPlaced }) => {
   const [status, setStatus] = useState({ type: "", text: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const defaultAddress =
+    user?.address || user?.addresses?.find((item) => item.isDefault)?.address || "";
+
   const total = useMemo(() => Number(form.amount) * Number(form.quantity || 1), [form.amount, form.quantity]);
 
   useEffect(() => {
@@ -42,7 +45,7 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, onOrderPlaced }) => {
       ...current,
       customer: user?.name || current.customer,
       phone: user?.phone || current.phone,
-      address: user?.address || current.address,
+      address: defaultAddress || current.address,
       plan,
       amount,
       deliveryDate: current.deliveryDate || today,

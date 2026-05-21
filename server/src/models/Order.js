@@ -19,6 +19,7 @@ const orderSchema = new mongoose.Schema(
     },
     amount: { type: Number, required: true },
     time: { type: String, default: "" },
+    etaMinutes: { type: Number, default: null }, // Estimated delivery time in minutes
   },
   { timestamps: true }
 );

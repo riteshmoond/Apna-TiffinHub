@@ -34,15 +34,25 @@ const MyOrdersModal = ({ isOpen, onClose }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [prevStatus, setPrevStatus] = useState(null);
 
   const loadOrders = async () => {
     setIsLoading(true);
     setMessage("");
-
     try {
       const data = await getMyOrders(getUserToken());
       setOrders(data);
       setSelectedOrder((current) => data.find((order) => order._id === current?._id) || data[0] || null);
+      // Check for status change notification
+      const latestOrder = data.find((order) => order._id === (selectedOrder?._id)) || data[0];
+      if (latestOrder && prevStatus && latestOrder.status !== prevStatus) {
+        let statusMsg = null;
+        if (latestOrder.status === "Out for Delivery") statusMsg = "Your order is out for delivery.";
+        else if (latestOrder.status === "Delivered") statusMsg = "Your order has been delivered.";
+        else if (latestOrder.status === "Preparing") statusMsg = "Your order is being prepared.";
+        if (statusMsg) setMessage(statusMsg);
+      }
+      if (latestOrder) setPrevStatus(latestOrder.status);
     } catch (error) {
       setMessage(error.message || "Orders load failed");
     } finally {
@@ -50,8 +60,15 @@ const MyOrdersModal = ({ isOpen, onClose }) => {
     }
   };
 
+
   useEffect(() => {
-    if (isOpen) loadOrders();
+    if (!isOpen) return;
+    loadOrders();
+    const interval = setInterval(() => {
+      loadOrders();
+    }, 12000); // 12 seconds
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   useEffect(() => {
@@ -148,6 +165,11 @@ const MyOrdersModal = ({ isOpen, onClose }) => {
                     <p className="mt-1 font-semibold text-gray-500">
                       Placed on {new Date(selectedOrder.createdAt).toLocaleString("en-IN")}
                     </p>
+                    {selectedOrder.status === "Out for Delivery" && selectedOrder.etaMinutes && (
+                      <div className="mt-2 rounded-xl bg-violet-50 px-3 py-2 text-sm font-bold text-violet-700">
+                        Arriving in {selectedOrder.etaMinutes} min
+                      </div>
+                    )}
                   </div>
                   <div className="text-left sm:text-right">
                     <div className="text-3xl font-black text-primary">₹{selectedOrder.amount}</div>

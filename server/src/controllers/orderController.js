@@ -12,12 +12,13 @@ export const getMyOrders = async (req, res) => {
 };
 
 export const createOrder = async (req, res) => {
+  const fallbackAddress = req.user?.addresses?.find((item) => item.isDefault)?.address || "";
   const order = await Order.create({
     ...req.body,
     user: req.user._id,
     customer: req.body.customer || req.user.name,
     phone: req.body.phone || req.user.phone,
-    address: req.body.address || req.user.address,
+    address: req.body.address || req.user.address || fallbackAddress,
   });
 
   await Customer.findOneAndUpdate(
@@ -33,16 +34,20 @@ export const createOrder = async (req, res) => {
 };
 
 export const updateOrderStatus = async (req, res) => {
+  const update = { status: req.body.status };
+  if (req.body.status === "Out for Delivery" && req.body.etaMinutes) {
+    update.etaMinutes = req.body.etaMinutes;
+  } else if (req.body.status !== "Out for Delivery") {
+    update.etaMinutes = null;
+  }
   const order = await Order.findByIdAndUpdate(
     req.params.id,
-    { status: req.body.status },
+    update,
     { new: true, runValidators: true }
   );
-
   if (!order) {
     return res.status(404).json({ message: "Order not found" });
   }
-
   res.json(order);
 };
 

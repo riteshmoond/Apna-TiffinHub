@@ -8,6 +8,13 @@ const userSchema = new mongoose.Schema(
 		email: { type: String, unique: true, sparse: true, lowercase: true, trim: true },
 		password: { type: String, required: true },
 		address: { type: String, default: "", trim: true },
+		addresses: [
+			{
+				label: { type: String, default: "", trim: true },
+				address: { type: String, required: true, trim: true },
+				isDefault: { type: Boolean, default: false },
+			},
+		],
 	},
 	{ timestamps: true }
 );
