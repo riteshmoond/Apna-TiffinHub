@@ -41,6 +41,7 @@ const userResponse = (user, token) => ({
     name: user.name,
     phone: user.phone,
     email: user.email || "",
+    avatar: user.avatar || "",
     address: getDefaultAddress(user),
     addresses: user.addresses || [],
   },
@@ -107,6 +108,7 @@ export const updateProfile = async (req, res) => {
   const updates = {
     name: req.body.name,
     email: cleanEmail(req.body.email),
+    avatar: String(req.body.avatar || ""),
     address: defaultAddress || req.body.address || "",
     ...(hasAddresses ? { addresses } : {}),
   };

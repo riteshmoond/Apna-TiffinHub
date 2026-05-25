@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
+import L from "leaflet";
 import { createOrder } from "../lib/publicApi";
 import { getUserToken } from "../lib/userAuth";
 
@@ -27,11 +29,22 @@ const mealTimes = ["Lunch", "Dinner", "Both"];
 const paymentModes = ["Cash on Delivery", "UPI", "Pay on WhatsApp"];
 const UPI_ID = "royaltiffin@upi";
 const PAYEE_NAME = "Royal Tiffin Service";
+const DEFAULT_MAP_POSITION = { lat: 26.9124, lng: 75.7873 };
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+});
 
 const OrderModal = ({ isOpen, onClose, selectedPlan, user, prefillOrder, onOrderPlaced }) => {
   const [form, setForm] = useState(defaultOrder);
   const [status, setStatus] = useState({ type: "", text: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [locationQuery, setLocationQuery] = useState("");
+  const [locationResults, setLocationResults] = useState([]);
+  const [locationStatus, setLocationStatus] = useState("");
+  const [mapPosition, setMapPosition] = useState(DEFAULT_MAP_POSITION);
 
   const defaultAddress =
     user?.address || user?.addresses?.find((item) => item.isDefault)?.address || "";
@@ -63,6 +76,7 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, prefillOrder, onOrder
       amount,
     }));
     setStatus({ type: "", text: "" });
+    setMapPosition(DEFAULT_MAP_POSITION);
   }, [isOpen, selectedPlan, user, prefillOrder, defaultAddress]);
 
   useEffect(() => {
@@ -87,6 +101,89 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, prefillOrder, onOrder
       return { ...current, [field]: value };
     });
     setStatus({ type: "", text: "" });
+  };
+
+  const searchLocation = async () => {
+    if (!locationQuery.trim()) return;
+    setLocationStatus("Searching...");
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(locationQuery)}`
+      );
+      const data = await response.json();
+      setLocationResults(Array.isArray(data) ? data.slice(0, 5) : []);
+      setLocationStatus("");
+    } catch {
+      setLocationResults([]);
+      setLocationStatus("Search failed. Try again.");
+    }
+  };
+
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationStatus("Geolocation supported nahi hai.");
+      return;
+    }
+
+    setLocationStatus("Fetching current location...");
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
+          );
+
+          const data = await response.json();
+
+          if (data?.display_name) {
+            updateForm("address", data.display_name);
+            setMapPosition({ lat: latitude, lng: longitude });
+            setLocationStatus("Current location detected.");
+          } else {
+            setLocationStatus("Address not found.");
+          }
+        } catch (error) {
+          setLocationStatus("Location fetch failed.");
+        }
+      },
+      () => {
+        setLocationStatus("Location permission denied.");
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 12000,
+        maximumAge: 0,
+      }
+    );
+  };
+
+  const reverseGeocode = async (lat, lon) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`
+      );
+      const data = await response.json();
+      if (data?.display_name) {
+        updateForm("address", data.display_name);
+        setLocationStatus("Location selected from map.");
+      }
+    } catch {
+      setLocationStatus("Map location fetch failed.");
+    }
+  };
+
+  const MapClickHandler = () => {
+    useMapEvents({
+      click: (event) => {
+        const { lat, lng } = event.latlng;
+        setMapPosition({ lat, lng });
+        reverseGeocode(lat, lng);
+      },
+    });
+    return null;
   };
 
   const submitOrder = async (event) => {
@@ -228,6 +325,71 @@ const OrderModal = ({ isOpen, onClose, selectedPlan, user, prefillOrder, onOrder
                     className="mt-4 w-full rounded-xl border border-gray-200 px-4 py-3 font-semibold outline-none focus:border-primary"
                     required
                   />
+                  <div className="mt-3 flex w-full gap-2">
+                    <input
+                      value={locationQuery}
+                      onChange={(event) => setLocationQuery(event.target.value)}
+                      placeholder="Search location"
+                      className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm font-semibold outline-none focus:border-primary"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={searchLocation}
+                      className="rounded-xl bg-cream px-4 py-2 text-sm font-black text-primary"
+                    >
+                      Search
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={getCurrentLocation}
+                      className="rounded-xl bg-primary px-4 py-2 text-sm font-black text-white"
+                    >
+                      Use Current Location
+                    </button>
+                  </div>
+                  {locationStatus && (
+                    <div className="mt-2 text-xs font-bold text-gray-500">{locationStatus}</div>
+                  )}
+                  {locationResults.length > 0 && (
+                    <div className="mt-3 space-y-2 rounded-xl border border-gray-200 bg-white p-3">
+                      {locationResults.map((place) => (
+                        <button
+                          key={place.place_id}
+                          type="button"
+                          onClick={() => {
+                            updateForm("address", place.display_name);
+                            if (place.lat && place.lon) {
+                              setMapPosition({ lat: Number(place.lat), lng: Number(place.lon) });
+                            }
+                            setLocationResults([]);
+                          }}
+                          className="w-full rounded-xl bg-cream px-3 py-2 text-left text-xs font-bold text-gray-700 transition hover:bg-orange-100"
+                        >
+                          {place.display_name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <div className="mt-4 overflow-hidden rounded-xl border border-gray-200">
+                    <MapContainer
+                      center={mapPosition}
+                      zoom={15}
+                      scrollWheelZoom={false}
+                      style={{ height: "220px", width: "100%" }}
+                    >
+                      <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                      <Marker position={mapPosition} />
+                      <MapClickHandler />
+                    </MapContainer>
+                  </div>
+                  <div className="mt-2 text-xs font-bold text-gray-500">
+                    Map par click karke location select karo.
+                  </div>
                 </div>
 
                 <div>

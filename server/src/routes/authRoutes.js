@@ -9,6 +9,6 @@ router.post("/register", register);
 // User login
 router.post("/login", login);
 
-// router.post("/login", loginAdmin);
+// router.post("/login", loginAdmin); 
 
 export default router;

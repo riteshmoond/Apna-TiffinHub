@@ -75,8 +75,6 @@ const Home = () => {
       <Navbar
         user={user}
         onLogin={() => setIsAuthOpen(true)}
-        onUserLogout={handleUserLogout}
-        onMyOrders={() => setIsMyOrdersOpen(true)}
         onProfile={() => setIsProfileOpen(true)}
       />
       <HeroSection onOrder={openOrder} />
@@ -120,6 +118,11 @@ const Home = () => {
         user={user}
         onClose={() => setIsProfileOpen(false)}
         onUpdated={setUser}
+        onMyOrders={() => {
+          setIsProfileOpen(false);
+          setIsMyOrdersOpen(true);
+        }}
+        onLogout={handleUserLogout}
       />
     </>
   );

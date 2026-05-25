@@ -7,7 +7,7 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ];
 
-const Navbar = ({ user, onLogin, onUserLogout, onMyOrders, onProfile }) => {
+const Navbar = ({ user, onLogin, onProfile }) => {
   return (
     <nav className="sticky top-0 z-50 border-b border-orange-100 bg-white/90 backdrop-blur-xl">
       <div className="container-pad flex h-20 items-center justify-between gap-4">
@@ -35,30 +35,13 @@ const Navbar = ({ user, onLogin, onUserLogout, onMyOrders, onProfile }) => {
 
         <div className="flex items-center gap-3">
           {user ? (
-            <>
-              <span className="hidden text-sm font-black text-dark sm:inline">{user.name}</span>
-              <button
-                type="button"
-                onClick={onMyOrders}
-                className="rounded-xl bg-cream px-4 py-3 text-sm font-extrabold text-primary transition hover:bg-orange-100"
-              >
-                My Orders
-              </button>
-              <button
-                type="button"
-                onClick={onProfile}
-                className="rounded-xl bg-white px-4 py-3 text-sm font-extrabold text-dark ring-1 ring-gray-200 transition hover:bg-gray-50"
-              >
-                Profile
-              </button>
-              <button
-                type="button"
-                onClick={onUserLogout}
-                className="rounded-xl bg-gray-100 px-4 py-3 text-sm font-extrabold text-dark transition hover:bg-gray-200"
-              >
-                Logout
-              </button>
-            </>
+            <button
+              type="button"
+              onClick={onProfile}
+              className="rounded-xl bg-white px-4 py-3 text-sm font-extrabold text-dark ring-1 ring-gray-200 transition hover:bg-gray-50"
+            >
+              Profile
+            </button>
           ) : (
             <button
               type="button"
