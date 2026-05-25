@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
 import { connectDB } from "./src/config/db.js";
 import Admin from "./src/models/Admin.js";
+import CatalogItem from "./src/models/CatalogItem.js";
 import Customer from "./src/models/Customer.js";
+import GalleryItem from "./src/models/GalleryItem.js";
 import Meal from "./src/models/Meal.js";
 import MenuItem from "./src/models/MenuItem.js";
 import Order from "./src/models/Order.js";
@@ -14,7 +16,9 @@ const seed = async () => {
 
   await Promise.all([
     Admin.deleteMany(),
+    CatalogItem.deleteMany(),
     Customer.deleteMany(),
+    GalleryItem.deleteMany(),
     Meal.deleteMany(),
     MenuItem.deleteMany(),
     Order.deleteMany(),
@@ -41,6 +45,96 @@ const seed = async () => {
     { day: "Friday", menu: "Chole, Jeera Rice, Salad, Sweet" },
     { day: "Saturday", menu: "Mix Veg, Paratha, Curd" },
     { day: "Sunday", menu: "Special Veg Thali with Sweet" },
+  ]);
+
+  await CatalogItem.insertMany([
+    {
+      category: "Tiffin Thali",
+      name: "Basic Veg Thali",
+      price: 60,
+      description: "4 roti, seasonal sabji, dal, rice, and salad.",
+      imageUrl: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=900&q=80",
+      isAvailable: true,
+    },
+    {
+      category: "Tiffin Thali",
+      name: "Premium Paneer Thali",
+      price: 90,
+      description: "Paneer sabji, dal, rice, roti, sweet, salad, and buttermilk.",
+      imageUrl: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=900&q=80",
+      isAvailable: true,
+    },
+    {
+      category: "Office Lunch",
+      name: "Office Lunch Box",
+      price: 80,
+      description: "Compact lunch with roti, sabji, dal, rice, and pickle.",
+      imageUrl: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=900&q=80",
+      isAvailable: true,
+    },
+    {
+      category: "Combos",
+      name: "Rajma Rice Bowl",
+      price: 70,
+      description: "Homestyle rajma with steamed rice and onion salad.",
+      imageUrl: "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=900&q=80",
+      isAvailable: true,
+    },
+    {
+      category: "Add-ons",
+      name: "Extra Roti Pack",
+      price: 20,
+      description: "Two soft rotis packed fresh with your meal.",
+      imageUrl: "https://images.unsplash.com/photo-1598515214146-dab39da1243d?auto=format&fit=crop&w=900&q=80",
+      isAvailable: true,
+    },
+    {
+      category: "Add-ons",
+      name: "Sweet of the Day",
+      price: 30,
+      description: "Fresh daily sweet portion with lunch or dinner.",
+      imageUrl: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=900&q=80",
+      isAvailable: true,
+    },
+  ]);
+
+  await GalleryItem.insertMany([
+    {
+      title: "Fresh Veg Thali",
+      tag: "Lunch",
+      imageUrl: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=900&q=80",
+      isFeatured: true,
+    },
+    {
+      title: "Paneer Special",
+      tag: "Premium",
+      imageUrl: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=900&q=80",
+      isFeatured: true,
+    },
+    {
+      title: "Clean Tiffin Packing",
+      tag: "Hygienic",
+      imageUrl: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=900&q=80",
+      isFeatured: false,
+    },
+    {
+      title: "Office Lunch Box",
+      tag: "Office",
+      imageUrl: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=900&q=80",
+      isFeatured: false,
+    },
+    {
+      title: "Rajma Rice Bowl",
+      tag: "Homestyle",
+      imageUrl: "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=900&q=80",
+      isFeatured: false,
+    },
+    {
+      title: "Evening Dinner Prep",
+      tag: "Fresh",
+      imageUrl: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=900&q=80",
+      isFeatured: false,
+    },
   ]);
 
   await Customer.insertMany([

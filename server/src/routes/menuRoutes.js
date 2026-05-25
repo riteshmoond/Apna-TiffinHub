@@ -5,7 +5,7 @@ import { getMenu, updateMenu } from "../controllers/menuController.js";
 
 const router = express.Router();
 
-router.get("/", adminProtect, getMenu);
+router.get("/", getMenu);
 router.put("/", adminProtect, updateMenu);
 
 export default router;

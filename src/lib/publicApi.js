@@ -71,3 +71,12 @@ export const getGallery = async () => {
   }
   return data;
 };
+
+export const getWeeklyMenu = async () => {
+  const response = await fetch(`${API_BASE_URL}/menu`);
+  const data = await response.json().catch(() => ([]));
+  if (!response.ok) {
+    throw new Error(data.message || "Menu load failed");
+  }
+  return data;
+};
